@@ -145,6 +145,25 @@
 
     .btn-icon:hover { color: var(--text); border-color: #ffffff33; }
 
+    .btn-adjust {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px solid #ffffff18;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color .2s, border-color .2s;
+      letter-spacing: -.5px;
+    }
+
+    .btn-adjust:hover { color: var(--text); border-color: #ffffff33; }
+
     .sessions {
       display: flex;
       gap: 8px;
@@ -215,9 +234,11 @@
   </div>
 
   <div class="controls">
+    <button class="btn-adjust" title="-10 секунд" onclick="adjustTime(-10)">−10s</button>
     <button class="btn-icon" title="Сбросить" onclick="reset()">↺</button>
     <button class="btn-main" id="btn-play" onclick="toggle()">▶</button>
     <button class="btn-icon" title="Следующий" onclick="skip()">⏭</button>
+    <button class="btn-adjust" title="+10 секунд" onclick="adjustTime(10)">+10s</button>
   </div>
 
   <div class="sessions" id="dots"></div>
@@ -388,6 +409,11 @@ function notify() {
   if ('Notification' in window && Notification.permission === 'granted') {
     new Notification('Pomodoro', { body: messages[state.mode], icon: '' });
   }
+}
+
+function adjustTime(delta) {
+  state.remaining = Math.max(0, Math.min(state.remaining + delta, state.total));
+  render();
 }
 
 function onCfgChange() {
