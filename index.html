@@ -164,6 +164,28 @@
 
     .btn-adjust:hover { color: var(--text); border-color: #ffffff33; }
 
+    .quick-timers {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .btn-quick {
+      flex: 1;
+      border: 2px solid #ffffff18;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: color .2s, border-color .2s, background .2s;
+    }
+
+    .btn-quick:hover { color: var(--text); border-color: #ffffff33; background: #ffffff08; }
+
     .sessions {
       display: flex;
       gap: 8px;
@@ -239,6 +261,13 @@
     <button class="btn-main" id="btn-play" onclick="toggle()">▶</button>
     <button class="btn-icon" title="Следующий" onclick="skip()">⏭</button>
     <button class="btn-adjust" title="+10 секунд" onclick="adjustTime(10)">+10s</button>
+  </div>
+
+  <div class="quick-timers">
+    <button class="btn-quick" onclick="setTimer(1)">1 мин</button>
+    <button class="btn-quick" onclick="setTimer(3)">3 мин</button>
+    <button class="btn-quick" onclick="setTimer(5)">5 мин</button>
+    <button class="btn-quick" onclick="setTimer(10)">10 мин</button>
   </div>
 
   <div class="sessions" id="dots"></div>
@@ -431,6 +460,15 @@ function notify() {
 function adjustTime(delta) {
   state.remaining = Math.max(0, Math.min(state.remaining + delta, state.total));
   render();
+}
+
+function setTimer(minutes) {
+  if (state.running) clearInterval(state.interval);
+  state.running = false;
+  state.remaining = minutes * 60;
+  state.total = minutes * 60;
+  render();
+  startTimer();
 }
 
 function onCfgChange() {
