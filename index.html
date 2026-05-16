@@ -400,7 +400,24 @@ function onSessionEnd() {
   }
 }
 
+function beep() {
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  [0, 0.18].forEach(offset => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.value = 880;
+    gain.gain.setValueAtTime(0.4, ctx.currentTime + offset);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + offset + 0.15);
+    osc.start(ctx.currentTime + offset);
+    osc.stop(ctx.currentTime + offset + 0.15);
+  });
+}
+
 function notify() {
+  beep();
   const messages = {
     work: 'Время работы вышло! Сделайте перерыв.',
     short: 'Перерыв окончен! Пора работать.',
